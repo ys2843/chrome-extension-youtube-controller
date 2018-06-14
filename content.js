@@ -1,9 +1,9 @@
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     // console.log('message.method: ' + message.method)
-    switch(message.method) {
+    switch (message.method) {
         case 'next':
             window.location.href = document.querySelector('a.ytp-next-button').href;
-            sendResponse({message: 'nextFinish'})
+            sendResponse({message: 'nextFinish'});
             break;
         case 'stop':
             document.querySelector('button.ytp-play-button').click();
@@ -11,6 +11,12 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         case 'like':
             document.querySelectorAll("a.yt-simple-endpoint.style-scope.ytd-toggle-button-renderer")[0].click();
             break;
+        case 'search':
 
     }
 });
+
+function creatForm() {
+    let input = document.createElement('input');
+    
+}
