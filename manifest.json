@@ -5,15 +5,32 @@
   "manifest_version": 2,
   "author": "Yang Shi",
   "permissions": [
-    "tabs"
+    "tabs",
+    "notifications"
   ],
   "commands": {
-    "Ctrl+M": {
+    "like": {
       "suggested_key": {
-        "default": "Ctrl+M",
-        "mac": "Command+M"
+        "default": "Ctrl+Shift+3",
+        "mac": "Command+Shift+3"
       },
-      "description": "Ctrl+M.",
+      "description": "Ctrl(Command on Mac)+Shift+3",
+      "global": true
+    },
+    "stop": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+9",
+        "mac": "Command+Shift+9"
+      },
+      "description": "Ctrl(Command on Mac)+Shift+9",
+      "global": true
+    },
+    "next": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1",
+        "mac": "Command+Shift+1"
+      },
+      "description": "Ctrl(Command on Mac)+Shift+1",
       "global": true
     }
   },
