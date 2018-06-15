@@ -6,7 +6,8 @@
   "author": "Yang Shi",
   "permissions": [
     "tabs",
-    "notifications"
+    "notifications",
+    "storage"
   ],
   "commands": {
     "like": {

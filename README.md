@@ -6,3 +6,12 @@ Problems met in developing this project:
   + If id is static, new notification will not shown but is updated.
 + Async
   + All chrome api are async which mean you can not call sync function.
+
+
+
+
+
+| Tag  | Time |
+| ---- | ---- |
+|      |      |
+
