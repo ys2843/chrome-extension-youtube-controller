@@ -1,22 +1,4 @@
 let timer;
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    // console.log('message.method: ' + message.method)
-    switch (message.method) {
-        case 'next':
-            window.location.href = document.querySelector('a.ytp-next-button').href;
-            sendResponse({message: 'nextFinish'});
-            break;
-        case 'stop':
-            document.querySelector('button.ytp-play-button').click();
-            break;
-        case 'like':
-            document.querySelectorAll("a.yt-simple-endpoint.style-scope.ytd-toggle-button-renderer")[0].click();
-            break;
-        case 'urlUpdated':
-            setTimeout(updateTimer, 1000);
-            break;
-    }
-});
 
 function updateTimer() {
     if (timer) {
@@ -28,7 +10,7 @@ function updateTimer() {
     console.log(len);
 }
 
-setTimeout(addAllListener, 2000);
+// setTimeout(addAllListener, 2000);
 
 function addAllListener() {
 
@@ -55,5 +37,28 @@ function addAllListener() {
 
 function sendTags() {
     chrome.runtime.sendMessage({method: "videoId", videoId: window.location.href.split('=')[1]}, function (response) {
+    });
+}
+
+window.onload = function () {
+    addAllListener();
+    updateTimer();
+    chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+        // console.log('message.method: ' + message.method)
+        switch (message.method) {
+            case 'next':
+                window.location.href = document.querySelector('a.ytp-next-button').href;
+                sendResponse({message: 'nextFinish'});
+                break;
+            case 'stop':
+                document.querySelector('button.ytp-play-button').click();
+                break;
+            case 'like':
+                document.querySelectorAll("a.yt-simple-endpoint.style-scope.ytd-toggle-button-renderer")[0].click();
+                break;
+            case 'urlUpdated':
+                setTimeout(updateTimer, 1000);
+                break;
+        }
     });
 }

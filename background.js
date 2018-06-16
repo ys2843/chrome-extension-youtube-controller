@@ -76,7 +76,7 @@ chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.method === 'videoId') {
             if (!tmp.hasOwnProperty(request.videoId)) {
-                let url = "https://www.googleapis.com/youtube/v3/videos?key=AIzaSyB2eHvSSzxb4d_mWCJ8ZaQVTSksqH3NUM4&part=snippet&id=" + request.videoId;
+                let url = "https://www.googleapis.com/youtube/v3/videos?key=xx&part=snippet&id=" + request.videoId;
                 fetch(url)
                     .then(res => res.json())
                     .then(myjson => {
