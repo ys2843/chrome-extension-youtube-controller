@@ -1,7 +1,9 @@
+chrome.storage.local.clear();
 // Get local storage of user favorite
 let favTags = {};
 chrome.storage.local.get(['ytCtr'], function (result) {
     if (result.ytCtr) {
+        console.log(result.ytCtr)
         favTags = result.ytCtr;
     }
 });
@@ -30,6 +32,7 @@ function recAlgorithm(favTags) {
     return map;
 }
 
+
 // add keyboard control
 let timestamp = new Date().getTime();
 let id = 'myid' + timestamp;
@@ -50,14 +53,22 @@ chrome.commands.onCommand.addListener(function (command) {
                             console.log(chrome.runtime.lastError)
                         }
                     );
-
                 });
-
             }
         });
     });
 });
 
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    if (tab.url.indexOf('youtube.com') !== -1 && changeInfo && changeInfo.status == "complete") {
+        console.log("Tab updated: " + tab.url);
+        chrome.tabs.sendMessage(tabId, {method: 'urlUpdated', url: tab.url}, function (response) {
+            console.log(chrome.runtime.lastError);
+        });
+
+    }
+});
 
 // receive video id to fetch tags
 var tmp = {};
@@ -69,11 +80,14 @@ chrome.runtime.onMessage.addListener(
                 fetch(url)
                     .then(res => res.json())
                     .then(myjson => {
-                        tmp[request.videoId] = myjson.items[0].snippet.tags;
-                        updateFavTags(favTags, myjson.items[0].snippet.tags);
-                        chrome.storage.local.set({ytCtr: favTags}, function () {
-                            console.log('Favorite is updated');
-                        });
+                        if (myjson.items[0].snippet.tags) {
+                            tmp[request.videoId] = myjson.items[0].snippet.tags;
+                            updateFavTags(favTags, myjson.items[0].snippet.tags);
+                            console.log(favTags);
+                            chrome.storage.local.set({ytCtr: favTags}, function () {
+                                console.log('Favorite is updated');
+                            });
+                        }
                     });
             } else {
                 updateFavTags(favTags, tmp[request.videoId]);
@@ -83,4 +97,3 @@ chrome.runtime.onMessage.addListener(
             }
         }
     });
-

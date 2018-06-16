@@ -1,3 +1,4 @@
+let timer;
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     // console.log('message.method: ' + message.method)
     switch (message.method) {
@@ -11,22 +12,31 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         case 'like':
             document.querySelectorAll("a.yt-simple-endpoint.style-scope.ytd-toggle-button-renderer")[0].click();
             break;
+        case 'urlUpdated':
+            setTimeout(updateTimer, 1000);
+            break;
     }
 });
 
-let len = 1000 * document.querySelector('span.ytp-time-duration').innerText.split(':').map((ele, index, arr) =>
-    Math.pow(60, (arr.length - index - 1)) * Number(ele)).reduce((pre, cur) => pre + cur);
+function updateTimer() {
+    if (timer) {
+        clearTimeout(timer);
+    }
+    let len = 1000 * document.querySelector('span.ytp-time-duration').innerText.split(':').map((ele, index, arr) =>
+        Math.pow(60, (arr.length - index - 1)) * Number(ele)).reduce((pre, cur) => pre + cur);
+    timer = setTimeout(sendTags, len);
+    console.log(len);
+}
 
-setTimeout(sendTags, 0);
 setTimeout(addAllListener, 2000);
 
-
 function addAllListener() {
+
     console.log("All listener added");
     document.querySelectorAll("a.yt-simple-endpoint.style-scope.ytd-toggle-button-renderer")[0].addEventListener('click', function () {
         console.log('Like clicked!');
         if (this.querySelector('yt-icon-button').classList.contains('style-text')) {
-            console.log("message send");
+            console.log("Like message send");
             sendTags();
         }
     });
@@ -35,10 +45,12 @@ function addAllListener() {
     subscribeButton.addEventListener('click', function () {
         console.log("Subscribe clicked!");
         if (!isSubscribed) {
-            console.log("Subcribe message sent!");
+            console.log("Subscribe message sent!");
+            isSubscribed = !isSubscribed;
             sendTags();
         }
     });
+
 }
 
 function sendTags() {
