@@ -5,6 +5,7 @@
   "manifest_version": 2,
   "author": "Yang Shi",
   "permissions": [
+    "declarativeContent",
     "tabs",
     "notifications",
     "storage"

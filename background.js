@@ -1,12 +1,54 @@
 chrome.storage.local.clear();
-// Get local storage of user favorite
+// Get local storage of user favorite and video rec
+let recVideoList = [];
 let favTags = {};
 chrome.storage.local.get(['ytCtr'], function (result) {
     if (result.ytCtr) {
-        console.log(result.ytCtr)
+        // console.log(result.ytCtr);
         favTags = result.ytCtr;
+        fetchRecVideo(favTags);
     }
 });
+
+function updateRecVideoList() {
+    console.log('updateRecVideoList')
+    recVideoList = [];
+    fetchRecVideo(favTags);
+}
+
+
+function fetchRecVideo(favTags) {
+    let recTags = recAlgorithm(favTags);
+    console.log('recTags: ' + recTags);
+    recTags.forEach(function (ele) {
+        fetch('https://www.googleapis.com/youtube/v3/search?key=AIzaSyB2eHvSSzxb4d_mWCJ8ZaQVTSksqH3NUM4&part=snippet&maxResults=10&q=' + ele + '&type=video')
+            .then(res => res.json())
+            .then(js => {
+                let recVideoId = js.items[Math.floor(Math.random() * 10)].id.videoId;
+                let url = "https://www.googleapis.com/youtube/v3/videos?key=AIzaSyB2eHvSSzxb4d_mWCJ8ZaQVTSksqH3NUM4&part=snippet,statistics&id=" + recVideoId;
+                fetch(url)
+                    .then(res => res.json())
+                    .then(js => {
+                        recVideoList.push(js);
+                        console.log(recVideoList);
+                    })
+            })
+    });
+}
+
+function recAlgorithm(favTags) {
+    let curHour = new Date().getHours();
+    let map = [];
+    for (let item in favTags) {
+        let sum = 0;
+        favTags[item].forEach(function (ele) {
+            sum += Math.pow(1 / Math.E, (ele - curHour));
+        });
+        map.push([item, sum]);
+    }
+    return map.sort((a, b) => b[1] - a[1]).slice(0, 5).map(ele => ele[0]);
+}
+
 
 function updateFavTags(favTags, newTags) {
     newTags.forEach(function (ele) {
@@ -16,20 +58,8 @@ function updateFavTags(favTags, newTags) {
             favTags[ele] = [new Date().getHours()];
         }
     });
+    console.log(favTags);
     return favTags;
-}
-
-function recAlgorithm(favTags) {
-    let curHour = new Date().getHours();
-    let map = {};
-    for (let item in favTags) {
-        let sum = 0;
-        favTags[item].forEach(function (ele) {
-            sum += Math.pow(1 / Math.E, (ele - curHour));
-        });
-        map[item] = sum;
-    }
-    return map;
 }
 
 
@@ -61,8 +91,8 @@ chrome.commands.onCommand.addListener(function (command) {
 
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    if (tab.url.indexOf('youtube.com') !== -1 && changeInfo && changeInfo.status == "complete") {
-        console.log("Tab updated: " + tab.url);
+    if (tab.url.indexOf('youtube.com') !== -1 && changeInfo && changeInfo.status === "complete") {
+        // console.log("Tab updated: " + tab.url);
         chrome.tabs.sendMessage(tabId, {method: 'urlUpdated', url: tab.url}, function (response) {
             console.log(chrome.runtime.lastError);
         });
@@ -70,34 +100,46 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     }
 });
 
+// use a tmp to cache the AJAX content in order to reduce HTTP requests
+let tmp = {};
 // receive video id to fetch tags
-var tmp = {};
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.method === 'videoId') {
             if (!tmp.hasOwnProperty(request.videoId)) {
-<<<<<<< HEAD
-                let url = "https://www.googleapis.com/youtube/v3/videos?key=xx&part=snippet&id=" + request.videoId;
-=======
-                let url = "https://www.googleapis.com/youtube/v3/videos?key=xxx&part=snippet&id=" + request.videoId;
->>>>>>> 306b70afb0a515fc955b6b7544f700aa08a29cad
+                let url = "https://www.googleapis.com/youtube/v3/videos?key=AIzaSyB2eHvSSzxb4d_mWCJ8ZaQVTSksqH3NUM4&part=snippet&id=" + request.videoId;
                 fetch(url)
                     .then(res => res.json())
                     .then(myjson => {
                         if (myjson.items[0].snippet.tags) {
                             tmp[request.videoId] = myjson.items[0].snippet.tags;
-                            updateFavTags(favTags, myjson.items[0].snippet.tags);
-                            console.log(favTags);
+                            favTags = updateFavTags(favTags, myjson.items[0].snippet.tags);
+                            updateRecVideoList();
                             chrome.storage.local.set({ytCtr: favTags}, function () {
                                 console.log('Favorite is updated');
                             });
                         }
                     });
             } else {
-                updateFavTags(favTags, tmp[request.videoId]);
+                favTags = updateFavTags(favTags, tmp[request.videoId]);
+                updateRecVideoList();
                 chrome.storage.local.set({ytCtr: favTags}, function () {
                     console.log('Favorite is updated');
                 });
             }
+        } else if (request.method === 'handshake') {
+            chrome.runtime.sendMessage({handshake: 'done', data: recVideoList}, function (response) {
+            });
         }
     });
+
+// page action show
+chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
+    chrome.declarativeContent.onPageChanged.addRules([{
+        conditions: [new chrome.declarativeContent.PageStateMatcher({
+            pageUrl: {hostEquals: 'www.youtube.com'},
+        })
+        ],
+        actions: [new chrome.declarativeContent.ShowPageAction()]
+    }]);
+});
