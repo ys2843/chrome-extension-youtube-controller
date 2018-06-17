@@ -5,7 +5,18 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.handshake === 'done') {
         message.data.forEach(function (ele) {
             let ob = {};
-            ob.img = ele.items[0].snippet.thumbnails.maxres.url;
+            console.log(ele)
+            if (ele.items[0].snippet.thumbnails.maxres) {
+                ob.img = ele.items[0].snippet.thumbnails.maxres.url;
+            } else if (ob.img = ele.items[0].snippet.thumbnails.standard) {
+                ob.img = ele.items[0].snippet.thumbnails.standard.url;
+            } else if (ob.img = ele.items[0].snippet.thumbnails.high) {
+                ob.img = ele.items[0].snippet.thumbnails.high.url;
+            } else if (ob.img = ele.items[0].snippet.thumbnails.medium) {
+                ob.img = ele.items[0].snippet.thumbnails.medium.url;
+            } else {
+                ob.img = ele.items[0].snippet.thumbnails.default.url;
+            }
             ob.channelTitle = ele.items[0].snippet.channelTitle;
             ob.title = ele.items[0].snippet.title;
             ob.viewCount = ele.items[0].statistics.viewCount;
@@ -25,8 +36,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             img.alt = "Video Image";
             img.width = "168";
             subContainer.appendChild(img);
-            let link = document.createElement('a');
-            link.href = "https://www.youtube.com/watch?v=" + ele.id;
+            let link = document.createElement('div');
             let title = document.createElement('h5');
             title.innerText = ele.title;
             let channelTitle = document.createElement('p');
@@ -35,6 +45,15 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             link.appendChild(channelTitle);
             subContainer.appendChild(link);
             container.appendChild(subContainer);
+            subContainer.addEventListener('click', function () {
+                chrome.tabs.query({url: "https://www.youtube.com/*"}, function (tabs) {
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        method: "popupNext",
+                        url: "https://www.youtube.com/watch?v=" + ele.id
+                    }, function (response) {
+                    });
+                });
+            });
         });
     }
 });

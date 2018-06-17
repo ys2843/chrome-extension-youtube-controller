@@ -1,6 +1,7 @@
 let timer;
 
 function updateTimer() {
+    console.log("Timer reset!")
     if (timer) {
         clearTimeout(timer);
     }
@@ -39,12 +40,13 @@ function addAllListener() {
 
 // Send the video's id to background.js
 function sendTags() {
+    console.log("Tag sent to backrgound!");
     chrome.runtime.sendMessage({method: "videoId", videoId: window.location.href.split('=')[1]}, function (response) {
     });
 }
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    console.log('message.method: ' + message.method)
+    console.log('message.method: ' + message.method);
     switch (message.method) {
         case 'next':
             window.location.href = document.querySelector('a.ytp-next-button').href;
@@ -59,10 +61,11 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         case 'urlUpdated':
             setTimeout(updateTimer, 1000);
             break;
+        case 'popupNext':
+            window.location.href = message.url;
+            break;
     }
 });
 
-window.onload = function () {
-    addAllListener();
-    updateTimer();
-}
+setTimeout(addAllListener, 2000);
+setTimeout(updateTimer, 0);
