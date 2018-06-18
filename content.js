@@ -49,14 +49,23 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     console.log('message.method: ' + message.method);
     switch (message.method) {
         case 'next':
-            window.location.href = document.querySelector('a.ytp-next-button').href;
+            // window.location.href = document.querySelector('a.ytp-next-button').href;
+            document.querySelector('a.ytp-next-button').click();
             sendResponse({message: 'nextFinish'});
             break;
         case 'stop':
             document.querySelector('button.ytp-play-button').click();
             break;
         case 'like':
-            document.querySelectorAll("a.yt-simple-endpoint.style-scope.ytd-toggle-button-renderer")[0].click();
+            let butList = document.querySelectorAll("a.yt-simple-endpoint.style-scope.ytd-toggle-button-renderer");
+            if (butList.length > 4) {
+                butList[3].click();
+            } else {
+                butList[0].click();
+            }
+            break;
+        case 'pre':
+            document.querySelector('a.ytp-prev-button.ytp-button').click();
             break;
         case 'urlUpdated':
             setTimeout(updateTimer, 1000);

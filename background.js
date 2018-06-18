@@ -25,7 +25,7 @@ function fetchRecVideo(favTags) {
             .then(res => res.json())
             .then(js => {
                 let recVideoId = js.items[Math.floor(Math.random() * 10)].id.videoId;
-                let url = "https://www.googleapis.com/youtube/v3/videos?key=AIzaSyB2eHvSSzxb4d_mWCJ8ZaQVTSksqH3NUM4&part=snippet,statistics&id=" + recVideoId;
+                let url = "https://www.googleapis.com/youtube/v3/videos?key=AIzaSyB2eHvSSzxb4d_mWCJ8ZaQVTSksqH3NUM4&part=snippet&id=" + recVideoId;
                 fetch(url)
                     .then(res => res.json())
                     .then(js => {
@@ -75,7 +75,7 @@ chrome.commands.onCommand.addListener(function (command) {
                 chrome.tabs.query({url: "https://www.youtube.com/*"}, function (tabs) {
                     chrome.notifications.create(id, {
                             type: 'basic',
-                            iconUrl: './images/get_started128.png',
+                            iconUrl: './images/128.png',
                             title: 'Now playing',
                             message: tabs[0].title
                         },

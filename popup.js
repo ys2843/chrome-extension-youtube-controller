@@ -6,9 +6,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         message.data.forEach(function (ele) {
             let ob = {};
             console.log(ele)
-            if (ele.items[0].snippet.thumbnails.maxres) {
-                ob.img = ele.items[0].snippet.thumbnails.maxres.url;
-            } else if (ob.img = ele.items[0].snippet.thumbnails.standard) {
+            if (ob.img = ele.items[0].snippet.thumbnails.standard) {
                 ob.img = ele.items[0].snippet.thumbnails.standard.url;
             } else if (ob.img = ele.items[0].snippet.thumbnails.high) {
                 ob.img = ele.items[0].snippet.thumbnails.high.url;
@@ -19,11 +17,21 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             }
             ob.channelTitle = ele.items[0].snippet.channelTitle;
             ob.title = ele.items[0].snippet.title;
-            ob.viewCount = ele.items[0].statistics.viewCount;
             ob.id = ele.items[0].id;
             recVideoList.push(ob);
         });
         let container = document.querySelector('div.carousel-inner');
+        container.style.transitionDuration = "0.3s";
+        container.onmouseover = function () {
+            container.style.cursor = "pointer";
+            container.style.color = "blue";
+            container.style.opacity = "0.7";
+        };
+        container.onmouseout = function () {
+            container.style.cursor = "default";
+            container.style.color = "black";
+            container.style.opacity = "1";
+        };
         recVideoList.forEach(function (ele, index) {
             let subContainer = document.createElement('div');
             subContainer.classList.add("carousel-item");
@@ -34,13 +42,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             img.classList.add("d-block", "w-100");
             img.src = ele.img;
             img.alt = "Video Image";
-            img.width = "168";
+            img.width = "168px";
+            img.style.padding = "5px 0px 10px 0px";
             subContainer.appendChild(img);
             let link = document.createElement('div');
-            let title = document.createElement('h5');
+            let title = document.createElement('h6');
             title.innerText = ele.title;
+            title.style.paddingBottom = '5px';
             let channelTitle = document.createElement('p');
             channelTitle.innerText = ele.channelTitle;
+            channelTitle.classList.add("blockquote-footer");
             link.appendChild(title);
             link.appendChild(channelTitle);
             subContainer.appendChild(link);

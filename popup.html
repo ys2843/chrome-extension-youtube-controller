@@ -12,12 +12,21 @@
     <style>
         body {
             width: 300px;
-            heigh: 200px;
+            padding: 20px;
+        }
+
+        h3, h6, p {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+        }
+
+        #carouselExampleIndicators {
+            height: 320px;
         }
     </style>
 </head>
 <body>
-<h2>Videos you may be interested in ...</h2>
+<h3>Recommendation</h3>
+<h6>Based on your daily routine</h6>
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner"></div>
     <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -32,7 +41,7 @@
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script type="text/javascript" src="popup.js"></script>
+<script src="popup.js"></script>
 <script src="jquery-3.2.1.min.js"></script>
 <script src="bootstrap.min.js"></script>
 </body>

@@ -11,15 +11,15 @@
     "storage"
   ],
   "commands": {
-    "like": {
+    "pre": {
       "suggested_key": {
-        "default": "Ctrl+Shift+3",
-        "mac": "Command+Shift+3"
+        "default": "Ctrl+Shift+1",
+        "mac": "Command+Shift+1"
       },
-      "description": "Ctrl(Command on Mac)+Shift+3",
+      "description": "Ctrl(Command on Mac)+Shift+1",
       "global": true
     },
-    "stop": {
+    "like": {
       "suggested_key": {
         "default": "Ctrl+Shift+9",
         "mac": "Command+Shift+9"
@@ -27,12 +27,20 @@
       "description": "Ctrl(Command on Mac)+Shift+9",
       "global": true
     },
+    "stop": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+7",
+        "mac": "Command+Shift+7"
+      },
+      "description": "Ctrl(Command on Mac)+Shift+4",
+      "global": true
+    },
     "next": {
       "suggested_key": {
-        "default": "Ctrl+Shift+1",
-        "mac": "Command+Shift+1"
+        "default": "Ctrl+Shift+2",
+        "mac": "Command+Shift+2"
       },
-      "description": "Ctrl(Command on Mac)+Shift+1",
+      "description": "Ctrl(Command on Mac)+Shift+2",
       "global": true
     }
   },
@@ -49,18 +57,18 @@
   "page_action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "images/get_started16.png",
-      "32": "images/get_started32.png",
-      "48": "images/get_started48.png",
-      "128": "images/get_started128.png"
+      "16": "images/16.png",
+      "32": "images/32.png",
+      "48": "images/64.png",
+      "128": "images/128.png"
     },
     "default_title": "YoutubeController"
   },
   "icons": {
-    "16": "images/get_started16.png",
-    "32": "images/get_started32.png",
-    "48": "images/get_started48.png",
-    "128": "images/get_started128.png"
+    "16": "images/16.png",
+    "32": "images/32.png",
+    "48": "images/64.png",
+    "128": "images/128.png"
   },
   "background": {
     "scripts": [
