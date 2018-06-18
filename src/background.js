@@ -1,4 +1,4 @@
-chrome.storage.local.clear();
+// chrome.storage.local.clear();
 // Get local storage of user favorite and video rec
 let recVideoList = [];
 let favTags = {};
@@ -30,7 +30,7 @@ function fetchRecVideo(favTags) {
                     .then(res => res.json())
                     .then(js => {
                         recVideoList.push(js);
-                        console.log(recVideoList);
+                        // console.log(recVideoList);
                     })
             })
     });
@@ -58,7 +58,7 @@ function updateFavTags(favTags, newTags) {
             favTags[ele] = [new Date().getHours()];
         }
     });
-    console.log(favTags);
+    // console.log(favTags);
     return favTags;
 }
 
@@ -80,7 +80,7 @@ chrome.commands.onCommand.addListener(function (command) {
                             message: tabs[0].title
                         },
                         function (id) {
-                            console.log(chrome.runtime.lastError)
+                            // console.log(chrome.runtime.lastError)
                         }
                     );
                 });
@@ -94,7 +94,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (tab.url.indexOf('youtube.com') !== -1 && changeInfo && changeInfo.status === "complete") {
         // console.log("Tab updated: " + tab.url);
         chrome.tabs.sendMessage(tabId, {method: 'urlUpdated', url: tab.url}, function (response) {
-            console.log(chrome.runtime.lastError);
+            // console.log(chrome.runtime.lastError);
         });
 
     }
@@ -124,7 +124,7 @@ chrome.runtime.onMessage.addListener(
                 favTags = updateFavTags(favTags, tmp[request.videoId]);
                 updateRecVideoList();
                 chrome.storage.local.set({ytCtr: favTags}, function () {
-                    console.log('Favorite is updated');
+                    console.log('Favorite is updated by temp');
                 });
             }
         } else if (request.method === 'handshake') {

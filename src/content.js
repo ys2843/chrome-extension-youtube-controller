@@ -10,7 +10,6 @@ function updateTimer() {
         Math.pow(60, (arr.length - index - 1)) * Number(ele)).reduce((pre, cur) => pre + cur);
     // Set the timer to the duration, trigger sendTags when video ends. This means user somewhat like this video.
     timer = setTimeout(sendTags, len - 100);
-    // console.log(len);
 }
 
 // Add listener on 'like' and 'subscribe' button, clicking such buttons shows interest of user to this video
@@ -77,4 +76,3 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 });
 
 setTimeout(addAllListener, 2000);
-setTimeout(updateTimer, 0);
