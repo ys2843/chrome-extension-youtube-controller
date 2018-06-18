@@ -5,7 +5,6 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.handshake === 'done') {
         message.data.forEach(function (ele) {
             let ob = {};
-            console.log(ele)
             if (ob.img = ele.items[0].snippet.thumbnails.standard) {
                 ob.img = ele.items[0].snippet.thumbnails.standard.url;
             } else if (ob.img = ele.items[0].snippet.thumbnails.high) {
@@ -67,4 +66,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             });
         });
     }
+});
+
+document.querySelector("button.btn.btn-outline-primary").addEventListener('click', function () {
+    chrome.storage.local.remove(['ytCtr'], function () {
+    });
 });

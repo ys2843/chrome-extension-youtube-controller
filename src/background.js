@@ -1,36 +1,28 @@
-// chrome.storage.local.clear();
-// Get local storage of user favorite and video rec
 let recVideoList = [];
 let favTags = {};
 chrome.storage.local.get(['ytCtr'], function (result) {
     if (result.ytCtr) {
-        // console.log(result.ytCtr);
+        console.log("get list from local storage!");
         favTags = result.ytCtr;
         fetchRecVideo(favTags);
     }
 });
 
 function updateRecVideoList() {
-    console.log('updateRecVideoList')
     recVideoList = [];
     fetchRecVideo(favTags);
 }
 
-
 function fetchRecVideo(favTags) {
     let recTags = recAlgorithm(favTags);
-    console.log('recTags: ' + recTags);
     recTags.forEach(function (ele) {
         fetch('https://www.googleapis.com/youtube/v3/search?key=AIzaSyB2eHvSSzxb4d_mWCJ8ZaQVTSksqH3NUM4&part=snippet&maxResults=10&q=' + ele + '&type=video')
             .then(res => res.json())
             .then(js => {
-                let recVideoId = js.items[Math.floor(Math.random() * 10)].id.videoId;
-                let url = "https://www.googleapis.com/youtube/v3/videos?key=AIzaSyB2eHvSSzxb4d_mWCJ8ZaQVTSksqH3NUM4&part=snippet&id=" + recVideoId;
-                fetch(url)
+                fetch("https://www.googleapis.com/youtube/v3/videos?key=AIzaSyB2eHvSSzxb4d_mWCJ8ZaQVTSksqH3NUM4&part=snippet&id=" + js.items[Math.floor(Math.random() * 10)].id.videoId)
                     .then(res => res.json())
                     .then(js => {
                         recVideoList.push(js);
-                        // console.log(recVideoList);
                     })
             })
     });
@@ -51,15 +43,14 @@ function recAlgorithm(favTags) {
 
 
 function updateFavTags(favTags, newTags) {
+    let hours = new Date().getHours();
     newTags.forEach(function (ele) {
         if (favTags.hasOwnProperty(ele)) {
-            favTags[ele].push(new Date().getHours());
+            favTags[ele].push(hours);
         } else {
-            favTags[ele] = [new Date().getHours()];
+            favTags[ele] = [hours];
         }
     });
-    // console.log(favTags);
-    return favTags;
 }
 
 
@@ -89,9 +80,9 @@ chrome.commands.onCommand.addListener(function (command) {
     });
 });
 
-
+// send urlupdated message to content.js
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    if (tab.url.indexOf('youtube.com') !== -1 && changeInfo && changeInfo.status === "complete") {
+    if (tab.url.indexOf('youtube.com/watch') !== -1 && changeInfo && changeInfo.status === "complete") {
         // console.log("Tab updated: " + tab.url);
         chrome.tabs.sendMessage(tabId, {method: 'urlUpdated', url: tab.url}, function (response) {
             // console.log(chrome.runtime.lastError);
@@ -107,13 +98,13 @@ chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.method === 'videoId') {
             if (!tmp.hasOwnProperty(request.videoId)) {
-                let url = "https://www.googleapis.com/youtube/v3/videos?key=AIzaSyB2eHvSSzxb4d_mWCJ8ZaQVTSksqH3NUM4&part=snippet&id=" + request.videoId;
-                fetch(url)
+                fetch("https://www.googleapis.com/youtube/v3/videos?key=AIzaSyB2eHvSSzxb4d_mWCJ8ZaQVTSksqH3NUM4&part=snippet&id=" + request.videoId)
                     .then(res => res.json())
                     .then(myjson => {
+                        console.log(myjson);
                         if (myjson.items[0].snippet.tags) {
                             tmp[request.videoId] = myjson.items[0].snippet.tags;
-                            favTags = updateFavTags(favTags, myjson.items[0].snippet.tags);
+                            updateFavTags(favTags, myjson.items[0].snippet.tags);
                             updateRecVideoList();
                             chrome.storage.local.set({ytCtr: favTags}, function () {
                                 console.log('Favorite is updated');
@@ -121,7 +112,7 @@ chrome.runtime.onMessage.addListener(
                         }
                     });
             } else {
-                favTags = updateFavTags(favTags, tmp[request.videoId]);
+                updateFavTags(favTags, tmp[request.videoId]);
                 updateRecVideoList();
                 chrome.storage.local.set({ytCtr: favTags}, function () {
                     console.log('Favorite is updated by temp');
