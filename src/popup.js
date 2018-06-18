@@ -2,7 +2,8 @@ chrome.runtime.sendMessage({method: "handshake"}, function (response) {
 });
 let recVideoList = [];
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    if (message.handshake === 'done') {
+    console.log(message);
+    if (message.handshake === 'done' && message.data.length !== 0) {
         message.data.forEach(function (ele) {
             let ob = {};
             if (ob.img = ele.items[0].snippet.thumbnails.standard) {
@@ -65,10 +66,28 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
                 });
             });
         });
+    } else {
+        document.querySelector("div#carouselExampleIndicators").style.display = "none";
+        document.querySelector("button.btn.btn-outline-primary").style.display = "none";
+        let warning = document.createElement("div");
+        warning.classList.add("alert", "alert-warning", "fade-in");
+        warning.role = "alert";
+        warning.innerText = "No data available...";
+        document.getElementsByTagName("body")[0].append(warning);
     }
 });
 
 document.querySelector("button.btn.btn-outline-primary").addEventListener('click', function () {
-    chrome.storage.local.remove(['ytCtr'], function () {
+    chrome.runtime.sendMessage({method: "reset"}, function (response) {
+        if (response.message === "resetFinish") {
+            document.querySelector("div#carouselExampleIndicators").style.display = "none";
+            document.querySelector("button.btn.btn-outline-primary").style.display = "none";
+            let reset = document.createElement("div");
+            reset.classList.add("alert", "alert-success", "fade-in");
+            reset.role = "alert";
+            reset.innerText = "You have successfully cleared the cache.";
+            document.getElementsByTagName("body")[0].append(reset);
+
+        }
     });
 });

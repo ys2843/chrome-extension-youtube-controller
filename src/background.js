@@ -121,6 +121,12 @@ chrome.runtime.onMessage.addListener(
         } else if (request.method === 'handshake') {
             chrome.runtime.sendMessage({handshake: 'done', data: recVideoList}, function (response) {
             });
+        } else if (request.method === 'reset') {
+            chrome.storage.local.remove(['ytCtr'], function () {
+            });
+            recVideoList = [];
+            favTags = {};
+            sendResponse({message: "resetFinish"});
         }
     });
 
