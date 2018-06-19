@@ -8,12 +8,12 @@ Inspired by my wife, I developed this chrome extension for her to listen to musi
 
 **Global keyboard shortcut**
 
-| Functions             | Shorcuts            |
-| --------------------- | ------------------- |
-| Back to previous song | Shift + Command + 1 |
-| Go to next song       | Shift + Command + 2 |
-| Pause video           | Shift + Command + 7 |
-| Like video            | Shift + Command + 9 |
+| Functions             | Shortcuts for Mac   | Shortcuts for Windows |
+| --------------------- | ------------------- | --------------------- |
+| Back to previous song | Shift + Command + 1 | Shift + Ctrl + 1      |
+| Go to next song       | Shift + Command + 2 | Shift + Ctrl + 2      |
+| Pause video           | Shift + Command + 7 | Shift + Ctrl + 7      |
+| Like video            | Shift + Command + 9 | Shift + Ctrl + 9      |
 
 Apart from this basic functionality, I myself added video recommendation and ads block functions to the extension. 
 
@@ -58,7 +58,6 @@ Now ads block function can only skip the video ads when it appears. Currently I 
 
 ### Conclusion
 
-Learned a lot from developing this project. After a long debugging journey, the extension works perfectly fine with no bugs. Installed on my wife's laptop, I finished my job hooray! 
+Learned a lot from developing this project. After a long debugging journey, the extension works perfectly fine with no bugs. Installed on my wife's laptop, I finished my job hooray! In the future, I will keep modifying this project (move on to ES6) and add more ads filters.
 
-In the future, I will keep modifying this project (move on to ES6) and add more ads filters.
-
+Thanks for reading this! Your star means a lot to me. Hope you have a good day!
