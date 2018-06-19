@@ -22,9 +22,9 @@ Apart from this basic functionality, I myself added video recommendation and ads
 People have routines, sometime we like to listen to or watch a specific style or type of video at a certain time. So this function is designed to meet this need to recommend videos to users according to the current time user is watching the videos, based on the history behavior of the user.
 
 To implement video recommendation, I collect all the **tags** of every video to which user shows interest (watch full length, like the video or subscribe the channel etc.), by querying Youtube V3 API. And store the tags each with a current timestamp into a list in localstorage. After that, I designed an algorithm to calculate the top 5 videos user most likely to watch at the time videos. 
-$$
-likelyhood=\sum^{n}_1\frac{1}{e}^{current time - timestamp}
-$$
+
+[equation](./readmeImage/equation.png)
+
 The larger time difference between current time and timestamp of a tag the less likely user want to watch this type of video now. And the more times a video is watched, the more preferable it is. Code below shows how I implement the main video recommendation algorithm. This function receive the user favorite video's tags with timestamps and return top 5 most interesting videos.
 
 ```javascript
