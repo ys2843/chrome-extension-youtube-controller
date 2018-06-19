@@ -19,6 +19,10 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         case 'urlUpdated':
             if (message.url.indexOf('watch') !== -1) {
                 setTimeout(updateTimer.bind(null, timer), 1000);
+                // Skip ads
+                if (document.querySelector('div.html5-video-player').classList[4] === "ad-showing") {
+                    document.querySelector('video').currentTime = document.querySelector('video').duration;
+                }
                 if (!listenerAdded) {
                     setTimeout(addAllListener, 1500);
                     listenerAdded = true;
