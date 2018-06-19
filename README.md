@@ -23,7 +23,7 @@ People have routines, sometime we like to listen to or watch a specific style or
 
 To implement video recommendation, I collect all the **tags** of every video to which user shows interest (watch full length, like the video or subscribe the channel etc.), by querying Youtube V3 API. And store the tags each with a current timestamp into a list in localstorage. After that, I designed an algorithm to calculate the top 5 videos user most likely to watch at the time videos. 
 
-[equation](./readmeImage/equation.png)
+![equation](./readmeImage/equation.png)
 
 The larger time difference between current time and timestamp of a tag the less likely user want to watch this type of video now. And the more times a video is watched, the more preferable it is. Code below shows how I implement the main video recommendation algorithm. This function receive the user favorite video's tags with timestamps and return top 5 most interesting videos.
 
@@ -59,5 +59,7 @@ Now ads block function can only skip the video ads when it appears. Currently I 
 ### Conclusion
 
 Learned a lot from developing this project. After a long debugging journey, the extension works perfectly fine with no bugs. Installed on my wife's laptop, I finished my job hooray! In the future, I will keep modifying this project (move on to ES6) and add more ads filters.
+
+![conclusion](./readmeImage/screenshot.png)
 
 Thanks for reading this! Your star means a lot to me. Hope you have a good day!
